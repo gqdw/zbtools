@@ -13,8 +13,9 @@ class HostInterface:
 		ip = None
 		hostid = None
 		port = None
+		interfaceid = None
 	def __repr__(self):
-		return 'HostInterface: hostid -> %s \t ip-> %s \t port-> %s \n' % (self.hostid , self.ip , self.port )
+		return 'HostInterface: interfaceid-> %s \t hostid -> %s \t ip-> %s \t port-> %s \n' % (self.interfaceid ,self.hostid , self.ip , self.port )
 
 
 class Host:
@@ -66,11 +67,12 @@ class Zabbix:
 		res = self.commit(a_data)['result']
 		# print res.json()
 		for r in res:
-			# print r
+			print r
 			host = HostInterface();
 			host.ip = r['ip']
 			host.hostid = r['hostid']
 			host.port = r['port']
+			host.interfaceid = r['interfaceid']
 			# self.hosts.append(r['ip'])
 			self.hosts.append(host)
 

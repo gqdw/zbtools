@@ -8,8 +8,23 @@ import sys
 # headers = {'Content-Type': 'application/json-rpc'}
 
 # print auth
+class HostInterface:
+	def __init__(self):
+		ip = None
+		hostid = None
+		port = None
+	def __repr__(self):
+		return self.hostid + '\t' + self.ip + '\t' + self.port + '\n'
 
-class Zabbix():
+
+class Host:
+	def __init__(self):
+		hostid = None
+		available = 0
+		host = None
+		status = 0
+
+class Zabbix:
 	def __init__(self):
 		self.auth = ''
 		self.z_url = 'https://zabbix.zhai.me/api_jsonrpc.php'
@@ -51,7 +66,13 @@ class Zabbix():
 		res = self.commit(a_data)['result']
 		# print res.json()
 		for r in res:
-			self.hosts.append(r['ip'])
+			# print r
+			host = HostInterface();
+			host.ip = r['ip']
+			host.hostid = r['hostid']
+			host.port = r['port']
+			# self.hosts.append(r['ip'])
+			self.hosts.append(host)
 
 
 def main():

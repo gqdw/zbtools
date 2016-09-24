@@ -4,7 +4,7 @@ import sys
 
 def main():
 	if len(sys.argv) != 2:
-		print 'useage: %s [thehostip]' % (sys.argv[0])
+		print 'useage: %s [the-host-ip]' % (sys.argv[0])
 		sys.exit(1)
 	Z = Zabbix()
 	Z.get_auth()

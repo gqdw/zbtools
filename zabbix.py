@@ -25,6 +25,10 @@ class Host:
 		host = None
 		status = 0
 
+	def __repr__(self):
+		return 'Host: host -> %s \t hostid -> %s \t available -> %s \t status -> %s \n' \
+			% (self.host, self.hostid, self.available, self.status)
+
 class Zabbix:
 	def __init__(self):
 		self.auth = ''
@@ -96,14 +100,51 @@ class Zabbix:
 			# self.hosts.append(r['ip'])
 			self.hosts.append(host)
 
+	def get_host_by_name(self, hostname):
+		'''
+		return Host Object
+		'''
+		data = {
+		    "jsonrpc": "2.0",
+		    "method": "host.get",
+		    "params": {
+		        "output": "extend",
+		        "filter": {
+		            "host": [
+		                hostname,
+		            ]
+		        }
+		    },
+		    "auth": self.auth,
+		    "id": self.times
+		}
+		res = self.commit(data)
+		try:
+			host = res.get('result')[0]
+			# for debug
+			print host
+			h = Host()
+			h.available = host.get('available')
+			h.status = host.get('status')
+			h.host = host.get('host')
+			h.hostid = host.get('hostid')
+			return h
+			# h
+		except Exception as e:
+			print 'cannot get host by the name'
+			sys.exit(2)
+		# host = res['result'][0]
 
 def main():
 	Z = Zabbix()
 	Z.get_auth()
 	Z.get_hostip()
-	print Z.hosts
+	# print Z.hosts
 	# ip = '10.45.51.80'
 	# Z.del_host_from_ip(ip)
+	h = Z.get_host_by_name('wiki')
+	print h
+	# Z.get_host_by_name('wiki2')
 
 
 if __name__ == '__main__':

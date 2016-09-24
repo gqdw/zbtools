@@ -50,6 +50,26 @@ class Zabbix:
 			print 'cannot read password from ~/zabbix.cfg'
 			sys.exit(1)
 
+	def del_host_from_ip(self, ip):
+		hostid = None
+		for h in self.hosts:
+			if ip == h.ip:
+				hostid = h.hostid
+		data = {
+		    "jsonrpc": "2.0",
+		    "method": "host.delete",
+		    "params": [
+		        hostid
+		    ],
+		    "auth": self.auth,
+		    "id": self.times
+		}
+		print data
+		if hostid != None:
+			res = self.commit(data)
+			print res
+			print 'host %s deleted!' % ip
+
 		
 
 	def get_hostip(self):
@@ -67,7 +87,7 @@ class Zabbix:
 		res = self.commit(a_data)['result']
 		# print res.json()
 		for r in res:
-			print r
+			# print r
 			host = HostInterface();
 			host.ip = r['ip']
 			host.hostid = r['hostid']
@@ -82,6 +102,8 @@ def main():
 	Z.get_auth()
 	Z.get_hostip()
 	print Z.hosts
+	# ip = '10.45.51.80'
+	# Z.del_host_from_ip(ip)
 
 
 if __name__ == '__main__':

@@ -14,7 +14,7 @@ class HostInterface:
 		hostid = None
 		port = None
 	def __repr__(self):
-		return self.hostid + '\t' + self.ip + '\t' + self.port + '\n'
+		return 'HostInterface: hostid -> %s \t ip-> %s \t port-> %s \n' % (self.hostid , self.ip , self.port )
 
 
 class Host:

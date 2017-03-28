@@ -32,7 +32,7 @@ class Host:
 class Zabbix:
 	def __init__(self):
 		self.auth = ''
-		self.z_url = 'https://zabbix.zhai.me/api_jsonrpc.php'
+		self.z_url = ''
 		self.times = 1
 		self.hosts = []
 
@@ -45,6 +45,8 @@ class Zabbix:
 		try:
 			config = ConfigParser.ConfigParser()
 			config.read(os.path.expanduser('~/zabbix.cfg'))
+			url = config.get('main', 'url')
+			self.z_url = url
 			user = config.get('main', 'user')
 			password = config.get('main', 'password')
 			a_data = {"jsonrpc": "2.0", "method": "user.login", "params": {"user": user, "password": password}, "id": 1}
@@ -142,7 +144,7 @@ def main():
 	# print Z.hosts
 	# ip = '10.45.51.80'
 	# Z.del_host_from_ip(ip)
-	h = Z.get_host_by_name('wiki')
+	h = Z.get_host_by_name('218.244.148.60')
 	print h
 	# Z.get_host_by_name('wiki2')
 

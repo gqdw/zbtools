@@ -76,6 +76,26 @@ class Zabbix:
 			print res
 			print 'host %s deleted!' % ip
 
+	def get_group(self):
+		data = {
+    "jsonrpc": "2.0",
+    "method": "hostgroup.get",
+    "params": {
+        "output": "extend",
+        "filter": {
+            "name": [
+                "push",
+                "Linux servers"
+            ]
+        }
+    },
+    "auth": self.auth,
+    "id": self.times
+}
+		res = self.commit(data)
+		print res;
+
+
 		
 
 	def get_hostip(self):
@@ -101,6 +121,51 @@ class Zabbix:
 			host.interfaceid = r['interfaceid']
 			# self.hosts.append(r['ip'])
 			self.hosts.append(host)
+
+	def add_host(self, name, ip):
+		data = {
+    "jsonrpc": "2.0",
+    "method": "host.create",
+    "params": {
+        "host": name,
+        "interfaces": [
+            {
+                "type": 1,
+                "main": 1,
+                "useip": 1,
+                "ip": ip,
+                "dns": "",
+                "port": "20050"
+            }
+        ],
+        "groups": [
+            {
+                "groupid": "58"
+            }
+        ],
+		"proxy_hostid" : "11409",
+        "inventory_mode": 0,
+    },
+    "auth": self.auth,
+    "id": self.times
+	}
+		res = self.commit(data)
+		print res
+
+	def get_proxy(self):
+		data = {
+    "jsonrpc": "2.0",
+    "method": "proxy.get",
+    "params": {
+        "output": "extend",
+        "selectInterface": "extend"
+    },
+    "auth": self.auth,
+    "id": self.times
+}
+		res = self.commit(data)
+
+		print json.dumps(res,sort_keys=True,indent=4)
 
 	def get_host_by_name(self, hostname):
 		'''
@@ -146,7 +211,19 @@ def main():
 	# Z.del_host_from_ip(ip)
 	h = Z.get_host_by_name('218.244.148.60')
 	print h
+	# push group id : 58
+	# Z.get_group()
 	# Z.get_host_by_name('wiki2')
+	# get proxy id ZP :  11409
+	# Z.get_proxy()
+	# Z.add_host('10.205.102.121', '10.205.102.121')
+	f = open('hosts.txt')
+	for line in f:
+		h = line.strip()
+		try:
+			Z.add_host(h,h)
+		except Exception as e:
+			print 'cannot create host: ',h
 
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ class Zabbix:
 		self.hosts = []
 
 	def commit(self, data):
-		res = requests.post(self.z_url, json=data).json()
+		res = requests.post(self.z_url, json=data,auth=('admin', 'eastmoney2017')).json()
 		self.times += 1
 		return res
 
@@ -84,7 +84,7 @@ class Zabbix:
         "output": "extend",
         "filter": {
             "name": [
-                "push",
+                "zp-nuff",
                 "Linux servers"
             ]
         }
@@ -140,7 +140,7 @@ class Zabbix:
         ],
         "groups": [
             {
-                "groupid": "58"
+                "groupid": "39"
             }
         ],
 		"proxy_hostid" : "11409",
@@ -212,18 +212,22 @@ def main():
 	h = Z.get_host_by_name('218.244.148.60')
 	print h
 	# push group id : 58
-	# Z.get_group()
+	Z.get_group()
 	# Z.get_host_by_name('wiki2')
 	# get proxy id ZP :  11409
 	# Z.get_proxy()
 	# Z.add_host('10.205.102.121', '10.205.102.121')
-	f = open('hosts.txt')
-	for line in f:
-		h = line.strip()
-		try:
-			Z.add_host(h,h)
-		except Exception as e:
-			print 'cannot create host: ',h
+	# f = open('hosts.txt')
+
+	# f = open('nuff.txt')
+	f = open('add-hosts.txt')
+	# f = open('nuff-ems.txt')
+#	for line in f:
+#		h = line.strip()
+#		try:
+#			Z.add_host('nuff-'+h,h)
+#		except Exception as e:
+#			print 'cannot create host: ',h
 
 
 if __name__ == '__main__':
